@@ -14,15 +14,15 @@ UAbilityManagerComponent::UAbilityManagerComponent()
 }
 
 
-void UAbilityManagerComponent::AddAbility(std::unique_ptr<Ability> ability)
-{
-	CharacterAbilities.push_back(ability);
-}
-
-void UAbilityManagerComponent::RemoveAbility(std::unique_ptr<Ability> ability)
-{
-	CharacterAbilities.remove(ability);
-}
+//void UAbilityManagerComponent::AddAbility(std::unique_ptr<Ability> ability)
+//{
+//	CharacterAbilities.push_back(ability);
+//}
+//
+//void UAbilityManagerComponent::RemoveAbility(std::unique_ptr<Ability> ability)
+//{
+//	CharacterAbilities.remove(ability);
+//}
 
 // Called when the game starts
 void UAbilityManagerComponent::BeginPlay()

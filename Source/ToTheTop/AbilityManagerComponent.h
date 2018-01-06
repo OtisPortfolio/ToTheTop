@@ -18,8 +18,8 @@ public:
 	// Sets default values for this component's properties
 	UAbilityManagerComponent();
 
-	void AddAbility(std::unique_ptr<Ability> ability);
-	void RemoveAbility(std::unique_ptr<Ability> ability);
+	//void AddAbility(std::unique_ptr<Ability> ability);
+	//void RemoveAbility(std::unique_ptr<Ability> ability);
 
 protected:
 	// Called when the game starts
@@ -29,5 +29,5 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
-	std::list<std::unique_ptr<Ability>> CharacterAbilities;
+	//std::list<std::unique_ptr<Ability>> CharacterAbilities;
 };

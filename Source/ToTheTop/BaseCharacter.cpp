@@ -23,9 +23,9 @@ ABaseCharacter::ABaseCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-	AbilityCooldown = 10;
-	bSuperJumpIsOnCooldown = false;
-	bHasteIsOnCooldown = false;
+	//////////////AbilityCooldown = 10;
+	//////////////bSuperJumpIsOnCooldown = false;
+	//////////////bHasteIsOnCooldown = false;
 	defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
 	defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
 
@@ -78,10 +78,7 @@ ABaseCharacter::ABaseCharacter()
 
  
 
-void ABaseCharacter::GetOverlappingActors()
-{
-
-}
+ 
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
@@ -122,7 +119,7 @@ void ABaseCharacter::MoveRight(float Value)
 
 void ABaseCharacter::Heal()
 {
-	AddHealth(healIncrement);
+	//AddHealth(healIncrement);
 }
  
 
@@ -130,41 +127,41 @@ void ABaseCharacter::Heal()
 
 void ABaseCharacter::SuperJump()
 {
-	if (!bSuperJumpIsOnCooldown)
-	{
-		bSuperJumpIsOnCooldown = true;
-		defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
-		this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 2;
-		FTimerHandle UnusedHandle;
-		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetSuperJump, SuperJumpTimeLength, false);
-	}
+	//if (!bSuperJumpIsOnCooldown)
+	//{
+	//	bSuperJumpIsOnCooldown = true;
+	//	defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
+	//	this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 2;
+	//	FTimerHandle UnusedHandle;
+	//	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetSuperJump, SuperJumpTimeLength, false);
+	//}
 
 
 }
 void ABaseCharacter::ResetSuperJump()
 {
-	FTimerHandle UnusedHandle;
-	this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
-	GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bSuperJumpIsOnCooldown = false; }, AbilityCooldown, false);
+	//FTimerHandle UnusedHandle;
+	//this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
+	//GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bSuperJumpIsOnCooldown = false; }, AbilityCooldown, false);
 }
 
 void ABaseCharacter::Haste()
 {
-	if (!bHasteIsOnCooldown)
-	{
-		bHasteIsOnCooldown = true;
-		defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
-		this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
-		FTimerHandle UnusedHandle;
-		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetHaste, HasteTimeLength, false);
-	}
+	//if (!bHasteIsOnCooldown)
+	//{
+	//	bHasteIsOnCooldown = true;
+	//	defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
+	//	this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
+	//	FTimerHandle UnusedHandle;
+	//	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetHaste, HasteTimeLength, false);
+	//}
 
 }
 void ABaseCharacter::ResetHaste()
 {
-	FTimerHandle UnusedHandle;
-	this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
-	GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bHasteIsOnCooldown = false; }, AbilityCooldown, false);
+	//FTimerHandle UnusedHandle;
+	//this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
+	//GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bHasteIsOnCooldown = false; }, AbilityCooldown, false);
 
 }
 

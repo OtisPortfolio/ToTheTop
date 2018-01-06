@@ -15,7 +15,7 @@ public:
 
 	//Damages any enemy in the AoeAttack radius sphere the character
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	virtual void Use(ABaseCharacter& character) override;
+		virtual void Use(ABaseCharacter& character) override {};
 
 	//Damages any enemy in the AoeAttack radius sphere the character
 	UFUNCTION(BlueprintCallable, Category = "Abilities")

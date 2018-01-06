@@ -12,7 +12,7 @@ class TOTHETOP_API SuperJump : public Ability
 public:
 	SuperJump();
 	~SuperJump();
-	virtual void Use(ABaseCharacter& character) override;
+	virtual void Use(ABaseCharacter& character) override {};
 private:
 	//is SuperJump ability on cooldown for Character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", Meta = (BlueprintProtected = "true"))

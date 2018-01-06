@@ -12,7 +12,7 @@ class TOTHETOP_API HealSelf : public Ability
 public:
 	HealSelf();
 	~HealSelf();
-	virtual void Use(ABaseCharacter& character) override;
+	virtual void Use(ABaseCharacter& character) override {};
 
 private:
 	//how much the healing spell will heal character

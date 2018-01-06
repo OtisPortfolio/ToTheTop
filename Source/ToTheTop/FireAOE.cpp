@@ -10,10 +10,10 @@ FireAOE::~FireAOE()
 {
 }
 
-void FireAOE::Use(ABaseCharacter& character)
-{
-	AoeAttack(character);
-}
+//void FireAOE::Use(ABaseCharacter& character)
+//{
+//	AoeAttack(character);
+//}
 
 //void FireAOE::AoeAttack(ABaseCharacter& character)
 //{

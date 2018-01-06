@@ -12,7 +12,7 @@ class TOTHETOP_API Haste : public Ability
 public:
 	Haste();
 	~Haste();
-	virtual void Use(ABaseCharacter& character) override;
+	virtual void Use(ABaseCharacter& character) override {};
 
 private:
 
