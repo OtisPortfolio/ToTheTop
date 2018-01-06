@@ -24,14 +24,26 @@ class TOTHETOP_API ABaseCharacter : public ACharacter
 		class USphereComponent* AttackSphere;
 
 	/** Particle System */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-		class UParticleSystemComponent* FireParticleSystem;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Heal", meta = (AllowPrivateAccess = "true"))
+		class UParticleSystemComponent* HealParticleSystem;
+
+	/** Particle System */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability", meta = (AllowPrivateAccess = "true"))
+		class UAbilityManagerComponent* AbilityManager;
 
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
-	
+ 
+
+	//resets Jump Z velocity to default
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void ResetSuperJump();
+
+	//resets walk speed to default
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void ResetHaste();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -85,15 +97,28 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+	
+ 
+
+	//Heals the character
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	void Heal();
 
 	//Attacks any character in the attack sphere
-	UFUNCTION(BlueprintCallable, Category = "Actions")
-	void Attack();
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+		void SuperJump();
 
+	//Attacks any character in the attack sphere
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+		void Haste();
 
+	//Animation implemented in BP
 	UFUNCTION(BlueprintImplementableEvent, Category = "Animations")
 		void InjuredAnimation();
  
+	//Animation implemented in BP
+	UFUNCTION(BlueprintImplementableEvent, Category = "Animations")
+		void DeathAnimation();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -103,7 +128,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", Meta = (BlueprintProtected = "true"))
 	int32 health;
 
-	//Attack power of the player character 
+	//how much the player will damage other characters 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
 	int32 attackPower;
+
+	//default jump velocity for character
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
+	float defaultZVelocity;
+
+	//default walk speed for character
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
+		float defaultWalkSpeed;
+
+ 
+
 };

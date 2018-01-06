@@ -9,7 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Classes/Components/SphereComponent.h"
 #include "Particles/ParticleSystemComponent.h"
-
+#include "TimerManager.h"
+#include "AbilityManagerComponent.h"
+ 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
@@ -21,8 +23,14 @@ ABaseCharacter::ABaseCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
+	AbilityCooldown = 10;
+	bSuperJumpIsOnCooldown = false;
+	bHasteIsOnCooldown = false;
+	defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
+	defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
 
-	//set defualt player attributes
+	int healIncrement = 10;
+	//set default player attributes
 	health = 100;
 	attackPower = 10;
 
@@ -49,10 +57,13 @@ ABaseCharacter::ABaseCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 
-	FireParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MyPSC"));
-	FireParticleSystem->AttachTo(RootComponent);
-	FireParticleSystem->SetVisibility(false);
+	HealParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MyPSC"));
+	HealParticleSystem->AttachTo(RootComponent);
+	HealParticleSystem->SetVisibility(false);
 
+	AbilityManager = CreateDefaultSubobject<UAbilityManagerComponent>(TEXT("AbilityManager"));
+	//AbilityManager->bAutoActivate = true;
+	//AbilityManager->bAutoRegister = true;
 
 	AttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
 	AttackSphere->AttachTo(RootComponent);
@@ -62,6 +73,13 @@ ABaseCharacter::ABaseCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 
+
+}
+
+ 
+
+void ABaseCharacter::GetOverlappingActors()
+{
 
 }
 
@@ -102,29 +120,53 @@ void ABaseCharacter::MoveRight(float Value)
 
 }
 
-void ABaseCharacter::Attack()
+void ABaseCharacter::Heal()
 {
-	//get all overlapping actors and store in an array
-	TArray<AActor*> CollectedActors;
-	AttackSphere->GetOverlappingActors(CollectedActors);
-	SetHealth(GetHealth());
-	//for each actor collision
-	for (int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected)
+	AddHealth(healIncrement);
+}
+ 
+
+
+
+void ABaseCharacter::SuperJump()
+{
+	if (!bSuperJumpIsOnCooldown)
 	{
-		//cast the actor to
-		ABaseCharacter* const baseCharacter = Cast<ABaseCharacter>(CollectedActors[iCollected]);
-			//if the cast is successful
-		if (baseCharacter && baseCharacter!=this)
-		{
-			//call set Health
-			baseCharacter->AddHealth(-GetAttackPower());
-		}
-			
+		bSuperJumpIsOnCooldown = true;
+		defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
+		this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 2;
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetSuperJump, SuperJumpTimeLength, false);
+	}
+
+
+}
+void ABaseCharacter::ResetSuperJump()
+{
+	FTimerHandle UnusedHandle;
+	this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
+	GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bSuperJumpIsOnCooldown = false; }, AbilityCooldown, false);
+}
+
+void ABaseCharacter::Haste()
+{
+	if (!bHasteIsOnCooldown)
+	{
+		bHasteIsOnCooldown = true;
+		defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
+		this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetHaste, HasteTimeLength, false);
 	}
 
 }
+void ABaseCharacter::ResetHaste()
+{
+	FTimerHandle UnusedHandle;
+	this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
+	GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bHasteIsOnCooldown = false; }, AbilityCooldown, false);
 
- 
+}
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
@@ -158,7 +200,16 @@ void ABaseCharacter::AddHealth(int addedHealth)
 	health += addedHealth;
 	if (addedHealth < 0)
 	{
-		InjuredAnimation();
+		if (health<=0)
+		{
+			DeathAnimation();
+		}
+		else
+		{
+			InjuredAnimation();
+
+		}
+
 	}
 }
 
@@ -174,7 +225,9 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
  	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ABaseCharacter::Attack);
+	PlayerInputComponent->BindAction("SuperJump", IE_Released, this, &ABaseCharacter::SuperJump);
+	PlayerInputComponent->BindAction("Haste", IE_Released, this, &ABaseCharacter::Haste);
+	PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABaseCharacter::Heal);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
