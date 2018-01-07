@@ -14,23 +14,26 @@ class TOTHETOP_API UHealSelfComponent : public UAbilityComponent
 {
 	GENERATED_BODY()
 
-		/** Attack Sphere */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-		class USphereComponent* AttackSphere;
+	/** Particle System */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|HealSelf|ParticleEffect", meta = (AllowPrivateAccess = "true"))
+	class UParticleSystemComponent* HealParticleSystem;
 public:
 	// Sets default values for this component's properties
 	UHealSelfComponent();
-	/** Returns Attack Sphere **/
-	FORCEINLINE class USphereComponent* GetAttackSphere() const { return AttackSphere; }
+ 
+	UFUNCTION(BlueprintGetter, Category = "Ability|HealSelf")
+	int GetHealIncrement() const { return healIncrement; }
+
+	virtual void BeginPlay() override;
 
 	//Heals the character
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	UFUNCTION(BlueprintCallable, Category = "Ability|HealSelf")
 	void Execute() override;
 
 protected:
  
 	//how much the healing spell will heal character
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities", Meta = (BlueprintProtected = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability|HealSelf", Meta = (BlueprintProtected = "true"))
 		int healIncrement;
 
  

@@ -18,28 +18,12 @@ class TOTHETOP_API ABaseCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-	
-
-
-	/** Particle System */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Heal", meta = (AllowPrivateAccess = "true"))
-		class UParticleSystemComponent* HealParticleSystem;
  
-
+ 
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
-
  
-
-	//resets Jump Z velocity to default
-	UFUNCTION(BlueprintCallable, Category = "Character")
-	void ResetSuperJump();
-
-	//resets walk speed to default
-	UFUNCTION(BlueprintCallable, Category = "Character")
-	void ResetHaste();
-
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseTurnRate;
@@ -91,18 +75,7 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
-	
  
- 
-
-	//Attacks any character in the attack sphere
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-		void SuperJump();
-
-	//Attacks any character in the attack sphere
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-		void Haste();
-
 	//Animation implemented in BP
 	UFUNCTION(BlueprintImplementableEvent, Category = "Animations")
 		void InjuredAnimation();
@@ -123,14 +96,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
 	int32 attackPower;
 
-	//default jump velocity for character
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
-	float defaultZVelocity;
-
-	//default walk speed for character
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
-		float defaultWalkSpeed;
-
  
-
 };

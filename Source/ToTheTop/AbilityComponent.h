@@ -19,15 +19,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	virtual void Execute() { check(0 && "You must override this"); };
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override { check(0 && "You must override this"); };
-
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override { check(0 && "You must override this"); };
-
+ 
 protected:
 	UPROPERTY(visibleAnywhere, Category="Ability")
 	float abilityCooldown;

@@ -9,12 +9,25 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TOTHETOP_API USuperJumpComponent : public UAbilityComponent
 {
 	GENERATED_BODY()
 	
-	
-	
+public:
+	USuperJumpComponent();
+ 
+	UFUNCTION(BlueprintCallable, Category = "Ability|SuperJump")
+	void Execute() override;
+
+	virtual void BeginPlay() override;
+	void ResetSuperJump();
+
+protected:
+	//default jump velocity for character
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|SuperJump", Meta = (BlueprintProtected = "true"))
+	float defaultZVelocity;
+
+ 	
 	
 };

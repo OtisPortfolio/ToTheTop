@@ -14,20 +14,18 @@ class TOTHETOP_API UFireAoeComponent : public UAbilityComponent
 	GENERATED_BODY()
 
 	/** Attack Sphere */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|FireAoe", meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* AttackSphere;
 public:	
 	// Sets default values for this component's properties
 	UFireAoeComponent();
+	virtual void BeginPlay() override;
+
 	/** Returns Attack Sphere **/
 	FORCEINLINE class USphereComponent* GetAttackSphere() const { return AttackSphere; }
 
- 	UFUNCTION(BlueprintCallable, Category = "Abilities")
+ 	UFUNCTION(BlueprintCallable, Category = "Ability|FireAoe")
 	void Execute() override;
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
  
 	

@@ -11,26 +11,25 @@ UFireAoeComponent::UFireAoeComponent()
 	abilityCooldown = 0;
 	activatedTime = 0;
 
-	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
-	AttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
+ 	AttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
+	AttackSphere->AttachTo(this);
 	AttackSphere->SetSphereRadius(50.f);
+ 
+}
+void UFireAoeComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 	if (character)
-	{
-		AttackSphere->AttachTo(this);
+	{	
 		if (character->InputComponent)
 		{
 			character->InputComponent->BindAction("Ability1", IE_Released, this, &UFireAoeComponent::Execute);
 		}
 	}
-
-
-	
-
-	// ...
 }
-
-
 void UFireAoeComponent::Execute()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
@@ -58,15 +57,7 @@ void UFireAoeComponent::Execute()
 
 
 }
-
-// Called when the game starts
-void UFireAoeComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
+ 
 
 
  

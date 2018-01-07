@@ -8,8 +8,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
-#include "Particles/ParticleSystemComponent.h"
-#include "TimerManager.h"
+
+
  
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -22,14 +22,10 @@ ABaseCharacter::ABaseCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-
-	defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
-	defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
-
-	int healIncrement = 10;
+ 
 	//set default player attributes
 	health = 100;
-	attackPower = 10;
+ 
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -52,20 +48,10 @@ ABaseCharacter::ABaseCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-
-	HealParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MyPSC"));
-	HealParticleSystem->AttachTo(RootComponent);
-	HealParticleSystem->SetVisibility(false);
-
  
-
-
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-
-
-
+ 
 }
 
  
@@ -108,51 +94,7 @@ void ABaseCharacter::MoveRight(float Value)
 	}
 
 }
-
  
- 
-
-
-
-void ABaseCharacter::SuperJump()
-{
-	//if (!bSuperJumpIsOnCooldown)
-	//{
-	//	bSuperJumpIsOnCooldown = true;
-	//	defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
-	//	this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 2;
-	//	FTimerHandle UnusedHandle;
-	//	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetSuperJump, SuperJumpTimeLength, false);
-	//}
-
-
-}
-void ABaseCharacter::ResetSuperJump()
-{
-	//FTimerHandle UnusedHandle;
-	//this->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
-	//GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bSuperJumpIsOnCooldown = false; }, AbilityCooldown, false);
-}
-
-void ABaseCharacter::Haste()
-{
-	//if (!bHasteIsOnCooldown)
-	//{
-	//	bHasteIsOnCooldown = true;
-	//	defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
-	//	this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
-	//	FTimerHandle UnusedHandle;
-	//	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABaseCharacter::ResetHaste, HasteTimeLength, false);
-	//}
-
-}
-void ABaseCharacter::ResetHaste()
-{
-	//FTimerHandle UnusedHandle;
-	//this->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
-	//GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bHasteIsOnCooldown = false; }, AbilityCooldown, false);
-
-}
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
@@ -166,20 +108,13 @@ int32 ABaseCharacter::GetHealth() const
 	return health;
 }
 
-int32 ABaseCharacter::GetAttackPower() const
-{
-	return attackPower;
-}
 
 void ABaseCharacter::SetHealth(int newHealth)
 {
 	health = newHealth;
 }
 
-void ABaseCharacter::SetAttackPower(int newAttackPower)
-{
-	attackPower = newAttackPower;
-}
+
 
 void ABaseCharacter::AddHealth(int addedHealth)
 {
@@ -204,7 +139,14 @@ void ABaseCharacter::AddAttackPower(int addedAttackPower)
 	attackPower += addedAttackPower;
 }
 
- 
+int32 ABaseCharacter::GetAttackPower() const
+{
+	return attackPower;
+}
+void ABaseCharacter::SetAttackPower(int newAttackPower)
+{
+	attackPower = newAttackPower;
+}
 
 // Called to bind functionality to input
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

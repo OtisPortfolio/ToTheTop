@@ -9,12 +9,23 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TOTHETOP_API UHasteComponent : public UAbilityComponent
 {
 	GENERATED_BODY()
+
+public:
+	UHasteComponent();
+	//Heals the character
+	UFUNCTION(BlueprintCallable, Category = "Ability|Haste")
+	void Execute() override;
+
+	virtual void BeginPlay() override;
+ 	void ResetHaste();
 	
-	
-	
-	
+protected:
+
+	//default walk speed for character
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|Haste", Meta = (BlueprintProtected = "true"))
+		float defaultWalkSpeed;
 };
