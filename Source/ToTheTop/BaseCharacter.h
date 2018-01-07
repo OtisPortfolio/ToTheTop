@@ -19,17 +19,12 @@ class TOTHETOP_API ABaseCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 	
-	/** Attack Sphere */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-		class USphereComponent* AttackSphere;
+
 
 	/** Particle System */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Heal", meta = (AllowPrivateAccess = "true"))
 		class UParticleSystemComponent* HealParticleSystem;
-
-	/** Particle System */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability", meta = (AllowPrivateAccess = "true"))
-		class UAbilityManagerComponent* AbilityManager;
+ 
 
 public:
 	// Sets default values for this character's properties
@@ -62,8 +57,7 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
-	/** Returns Attack Sphere **/
-	FORCEINLINE class USphereComponent* GetAttackSphere() const { return AttackSphere; }
+
 	
 	//Getter for health of the player character 
 	UFUNCTION(BlueprintGetter, Category = "Character")
@@ -99,10 +93,7 @@ protected:
 	void MoveRight(float Value);
 	
  
-
-	//Heals the character
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	void Heal();
+ 
 
 	//Attacks any character in the attack sphere
 	UFUNCTION(BlueprintCallable, Category = "Abilities")

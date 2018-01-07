@@ -7,10 +7,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Classes/Components/SphereComponent.h"
+
 #include "Particles/ParticleSystemComponent.h"
 #include "TimerManager.h"
-#include "AbilityManagerComponent.h"
  
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -23,9 +22,7 @@ ABaseCharacter::ABaseCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-	//////////////AbilityCooldown = 10;
-	//////////////bSuperJumpIsOnCooldown = false;
-	//////////////bHasteIsOnCooldown = false;
+
 	defaultZVelocity = this->GetCharacterMovement()->JumpZVelocity;
 	defaultWalkSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
 
@@ -61,13 +58,8 @@ ABaseCharacter::ABaseCharacter()
 	HealParticleSystem->AttachTo(RootComponent);
 	HealParticleSystem->SetVisibility(false);
 
-	AbilityManager = CreateDefaultSubobject<UAbilityManagerComponent>(TEXT("AbilityManager"));
-	//AbilityManager->bAutoActivate = true;
-	//AbilityManager->bAutoRegister = true;
+ 
 
-	AttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
-	AttackSphere->AttachTo(RootComponent);
-	AttackSphere->SetSphereRadius(50.f);
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -117,10 +109,7 @@ void ABaseCharacter::MoveRight(float Value)
 
 }
 
-void ABaseCharacter::Heal()
-{
-	//AddHealth(healIncrement);
-}
+ 
  
 
 
@@ -222,9 +211,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
  	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("SuperJump", IE_Released, this, &ABaseCharacter::SuperJump);
-	PlayerInputComponent->BindAction("Haste", IE_Released, this, &ABaseCharacter::Haste);
-	PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABaseCharacter::Heal);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 

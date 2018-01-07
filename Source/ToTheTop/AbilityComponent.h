@@ -3,27 +3,39 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/SceneComponent.h"
 #include "AbilityComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TOTHETOP_API UAbilityComponent : public UActorComponent
+UCLASS( ClassGroup=(Custom), abstract)
+class TOTHETOP_API UAbilityComponent : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UAbilityComponent();
+	UAbilityComponent()  : abilityCooldown(15.0f), activatedTime(5.0f), bisOnCooldown(false) {}
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	virtual void Execute() { check(0 && "You must override this"); };
 
 protected:
 	// Called when the game starts
-	virtual void BeginPlay() override;
+	virtual void BeginPlay() override { check(0 && "You must override this"); };
+
 
 public:	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override { check(0 && "You must override this"); };
 
-		
+protected:
+	UPROPERTY(visibleAnywhere, Category="Ability")
+	float abilityCooldown;
+
+	UPROPERTY(visibleAnywhere, Category = "Ability")
+	float activatedTime;
+
+	UPROPERTY(visibleAnywhere, Category = "Ability")
+	bool bisOnCooldown;
 	
 };

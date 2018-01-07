@@ -15,7 +15,5 @@ public:
 	virtual void Use(ABaseCharacter& character) override {};
 
 private:
-	//how much the healing spell will heal character
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities", Meta = (BlueprintProtected = "true"))
-		int healIncrement;
+
 };
