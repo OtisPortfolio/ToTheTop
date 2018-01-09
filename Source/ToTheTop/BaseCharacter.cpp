@@ -103,6 +103,11 @@ void ABaseCharacter::Tick(float DeltaTime)
 
 }
 
+void ABaseCharacter::FellOutOfWorld(const class UDamageType& dmgType)
+{
+	Death();
+}
+
 int32 ABaseCharacter::GetHealth() const
 {
 	return health;
@@ -123,7 +128,7 @@ void ABaseCharacter::AddHealth(int addedHealth)
 	{
 		if (health<=0)
 		{
-			DeathAnimation();
+			Death();
 		}
 		else
 		{
@@ -148,6 +153,11 @@ void ABaseCharacter::SetAttackPower(int newAttackPower)
 	attackPower = newAttackPower;
 }
 
+ 
+void ABaseCharacter::Death_Implementation()
+{
+	Destroy(this);
+}
 // Called to bind functionality to input
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

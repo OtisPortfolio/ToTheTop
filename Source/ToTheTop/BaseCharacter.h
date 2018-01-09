@@ -41,26 +41,33 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
-
+	//what happens when character hits Z kill zone
+	void FellOutOfWorld(const class UDamageType& dmgType) override;
 	
+	//Animation implemented in BP
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Character")
+		void Death();
+		void Death_Implementation();
+
+
 	//Getter for health of the player character 
-	UFUNCTION(BlueprintGetter, Category = "Character")
+	UFUNCTION(BlueprintPure, Category = "Character")
 	int32 GetHealth() const;
 
 	//Getter for Attack power of the player character 
-	UFUNCTION(BlueprintGetter, Category = "Character")
+	UFUNCTION(BlueprintPure, Category = "Character")
 	int32 GetAttackPower() const;
 
 	//Setter for health of the player character 
-	UFUNCTION(BlueprintSetter, Category = "Character")
+	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetHealth(int newHealth);
 
 	//Setter for Attack power of the player character 
-	UFUNCTION(BlueprintSetter, Category = "Character")
+	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetAttackPower(int newAttackPower);
 
 	//Setter for health of the player character 
-	UFUNCTION(BlueprintSetter, Category = "Character")
+	UFUNCTION(BlueprintCallable, Category = "Character")
 		void AddHealth(int addedHealth);
 
 	//Setter for Attack power of the player character 
@@ -81,8 +88,10 @@ protected:
 		void InjuredAnimation();
  
 	//Animation implemented in BP
-	UFUNCTION(BlueprintImplementableEvent, Category = "Animations")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Animations")
 		void DeathAnimation();
+
+
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
