@@ -9,7 +9,7 @@
 USuperJumpComponent::USuperJumpComponent()
 {
 	abilityCooldown = 10;
-	activatedTime = 5;
+	activatedTime = 2;
 	bisOnCooldown = false;
 
  
@@ -41,7 +41,7 @@ void USuperJumpComponent::Execute()
 		{
 			bisOnCooldown = true;
 			defaultZVelocity = character->GetCharacterMovement()->JumpZVelocity;
-			character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 2;
+			character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 1.5;
 			FTimerHandle UnusedHandle;
 			character->GetWorldTimerManager().SetTimer(UnusedHandle, this, &USuperJumpComponent::ResetSuperJump, activatedTime, false);
 		}

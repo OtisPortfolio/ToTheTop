@@ -34,8 +34,12 @@ void UHealSelfComponent::BeginPlay()
 void UHealSelfComponent::Execute()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
+	if (character)
+	{
+		character->AddHealth(healIncrement);
 
-	character->AddHealth(healIncrement);
+	}
+
 }
 
  

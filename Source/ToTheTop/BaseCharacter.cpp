@@ -24,7 +24,7 @@ ABaseCharacter::ABaseCharacter()
 	BaseLookUpRate = 45.f;
  
 	//set default player attributes
-	health = 100;
+	health = maxHealth;
  
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
@@ -124,6 +124,7 @@ void ABaseCharacter::SetHealth(int newHealth)
 void ABaseCharacter::AddHealth(int addedHealth)
 {
 	health += addedHealth;
+
 	if (addedHealth < 0)
 	{
 		if (health<=0)
@@ -136,6 +137,10 @@ void ABaseCharacter::AddHealth(int addedHealth)
 
 		}
 
+	}
+	else if(health > maxHealth)
+	{
+		health = maxHealth;
 	}
 }
 

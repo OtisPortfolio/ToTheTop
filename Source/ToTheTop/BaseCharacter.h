@@ -49,6 +49,10 @@ public:
 		void Death();
 		void Death_Implementation();
 
+	//Getter for health of the player character 
+	UPROPERTY(BlueprintReadOnly, Category = "Character")
+		int32 maxHealth = 100;
+
 
 	//Getter for health of the player character 
 	UFUNCTION(BlueprintPure, Category = "Character")
