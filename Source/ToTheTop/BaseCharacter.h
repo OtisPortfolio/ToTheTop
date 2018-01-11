@@ -80,7 +80,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
@@ -94,8 +94,7 @@ protected:
 	//Animation implemented in BP
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Animations")
 		void DeathAnimation();
-
-
+ 
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

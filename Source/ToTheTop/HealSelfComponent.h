@@ -21,7 +21,7 @@ public:
 	// Sets default values for this component's properties
 	UHealSelfComponent();
  
-	UFUNCTION(BlueprintGetter, Category = "Ability|HealSelf")
+	UFUNCTION(BlueprintPure, Category = "Ability|HealSelf")
 	int GetHealIncrement() const { return healIncrement; }
 
 	virtual void BeginPlay() override;

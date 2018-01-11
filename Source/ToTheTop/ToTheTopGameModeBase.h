@@ -9,30 +9,55 @@
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class EGameState : uint8
+{
+	EPlaying,
+	EGameOver,
+	EWin,
+	ENone
+};
+
 UCLASS()
 class TOTHETOP_API AToTheTopGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	AToTheTopGameModeBase();
 
+
+private:
+
 	//Handle used to get info for our game timer
 	FTimerHandle timerHandle;
 
-	bool gameOver;
+	EGameState currentState;
 
 
-	void BeginPlay() override;
-
+	virtual void BeginPlay() override;
 public:
 	UFUNCTION(BlueprintCallable, Category = "GameMode")
-		float GetGameTimer();
+		void SetGameState(EGameState newGameState);
+	UFUNCTION(BlueprintPure, Category = "GameMode")
+		EGameState GetGameState() const;
+	UFUNCTION(BlueprintPure, Category = "GameMode")
+		float GetGameTimer() const;
+
 	UFUNCTION(BlueprintCallable, Category = "GameMode")
-		void Win();
+		void LevelCompleted();
 	UFUNCTION(BlueprintCallable, Category = "GameMode")
-		void Loss();
-	UFUNCTION(BlueprintCallable, Category = "GameMode")
-		bool IsGameOver();
+		void TimesUp();
+
+
+protected:
+
 	//time allowed for completing level
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Power")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GameMode")
 		float timeToCompleteLevel;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GameMode")
+	TSubclassOf<class UUserWidget> HUDWidgetClass;
+
+	UPROPERTY()
+	class UUserWidget* currentWidget;
 };

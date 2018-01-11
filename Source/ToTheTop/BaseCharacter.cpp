@@ -65,6 +65,24 @@ void ABaseCharacter::BeginPlay()
 	
 }
 
+float ABaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	health -= Damage;
+
+	if (health <= 0)
+	{
+		Death();
+	}
+	else
+	{
+		InjuredAnimation();
+	}
+
+	//damage applied
+	return Damage;
+}
+
 void ABaseCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -123,25 +141,16 @@ void ABaseCharacter::SetHealth(int newHealth)
 
 void ABaseCharacter::AddHealth(int addedHealth)
 {
-	health += addedHealth;
 
-	if (addedHealth < 0)
+	if (health+addedHealth > maxHealth)
 	{
-		if (health<=0)
-		{
-			Death();
-		}
-		else
-		{
-			InjuredAnimation();
-
-		}
-
+		health = maxHealth; 
 	}
-	else if(health > maxHealth)
+	else if(addedHealth > 0)
 	{
-		health = maxHealth;
+		health += addedHealth;
 	}
+
 }
 
 void ABaseCharacter::AddAttackPower(int addedAttackPower)

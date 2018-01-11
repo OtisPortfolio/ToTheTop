@@ -10,50 +10,80 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/PawnMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
+#include "Blueprint/UserWidget.h"
 
 AToTheTopGameModeBase::AToTheTopGameModeBase()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BaseCharacter_BP"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+
+	PrimaryActorTick.bCanEverTick = true;
+
+	//Default Game State
+	currentState = EGameState::ENone;
 	//Seconds to complete level
 	timeToCompleteLevel = 60;
-	gameOver = false;
+
 
 }
 
 void AToTheTopGameModeBase::BeginPlay()
 {
+	Super::BeginPlay();
+
+	if (HUDWidgetClass != nullptr)
+	{
+		currentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+		if (currentWidget != nullptr)
+		{
+			currentWidget->AddToViewport();
+		}
+	}
+	currentState = EGameState::EPlaying;
+
 	//Set timer to complete level
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &AToTheTopGameModeBase::Loss, timeToCompleteLevel, false);
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &AToTheTopGameModeBase::TimesUp, timeToCompleteLevel, false);
 }
 
- 
-float AToTheTopGameModeBase::GetGameTimer()
+void AToTheTopGameModeBase::SetGameState(EGameState newGameState)
+{
+	currentState = newGameState;
+}
+
+EGameState AToTheTopGameModeBase::GetGameState() const
+{
+	return currentState;
+}
+
+float AToTheTopGameModeBase::GetGameTimer() const
 {
 	return GetWorld()->GetTimerManager().GetTimerRemaining(timerHandle);
 }
 
-void AToTheTopGameModeBase::Win()
+void AToTheTopGameModeBase::LevelCompleted()
 {
-	gameOver = true;
+	currentState = EGameState::EWin;
+	ABaseCharacter* player = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (player)
+	{
+		UCharacterMovementComponent* movementComp = player->GetCharacterMovement();
+		if (movementComp)
+		{
+			movementComp->DisableMovement();
+			
+			GetWorld()->GetTimerManager().PauseTimer(timerHandle);
+		}
+	}
 }
 
-void AToTheTopGameModeBase::Loss()
+void AToTheTopGameModeBase::TimesUp()
 {
+	currentState = EGameState::EGameOver;
 	ABaseCharacter* player = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	if (player)
 	{
 		//kill player if they did not finish in time
 		player->Death();
 	}
-	gameOver = true;
+ 
 }
 
-bool AToTheTopGameModeBase::IsGameOver()
-{
-	return gameOver;
-}
