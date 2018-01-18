@@ -3,30 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SceneComponent.h"
-#include "AbilityComponent.h"
-#include "FireAoeComponent.generated.h"
+#include "GameFramework/Actor.h"
+#include "Ability.h"
+#include "FireAOE.generated.h"
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TOTHETOP_API UFireAoeComponent : public UAbilityComponent
+UCLASS(ClassGroup = (Custom))
+class TOTHETOP_API AFireAOE : public AAbility
 {
 	GENERATED_BODY()
 
 	/** Attack Sphere */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|FireAoe", meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* AttackSphere;
-public:	
-	// Sets default values for this component's properties
-	UFireAoeComponent();
+public:
+
+	friend class UAbilityManagerComponent;
+
 	virtual void BeginPlay() override;
 
 	/** Returns Attack Sphere **/
 	FORCEINLINE class USphereComponent* GetAttackSphere() const { return AttackSphere; }
 
- 	UFUNCTION(BlueprintCallable, Category = "Ability|FireAoe")
-	void Execute() override;
+	UFUNCTION(BlueprintCallable, Category = "Ability|FireAoe")
+		void Execute() override {};
 
- 
-	
+	private:
+		AFireAOE();
+
 };

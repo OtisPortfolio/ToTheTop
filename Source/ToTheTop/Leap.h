@@ -3,31 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityComponent.h"
-#include "SuperJumpComponent.generated.h"
+#include "GameFramework/Actor.h"
+#include "Ability.h"
+#include "Leap.generated.h"
 
-/**
- * 
- */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class TOTHETOP_API USuperJumpComponent : public UAbilityComponent
+ 
+UCLASS()
+class TOTHETOP_API ALeap : public AAbility
 {
 	GENERATED_BODY()
-	
+		ALeap();
+	virtual void Tick(float DeltaTime) override;
+	FTimerHandle cooldownTimer;
+	FTimerHandle activationTimer;
+
+
 public:
-	USuperJumpComponent();
- 
+	friend class UAbilityManagerComponent;
+
 	UFUNCTION(BlueprintCallable, Category = "Ability|SuperJump")
-	void Execute() override;
+		void Execute() override;
 
 	virtual void BeginPlay() override;
+ 
 	void ResetSuperJump();
 
 protected:
 	//default jump velocity for character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|SuperJump", Meta = (BlueprintProtected = "true"))
-	float defaultZVelocity;
-
- 	
-	
+		float defaultZVelocity;
+ 
 };

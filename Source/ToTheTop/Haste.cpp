@@ -1,19 +1,20 @@
 // This project was created by John R. Otis Jr. and may not be used by anyone without explicit written consent by the author. Dec 2017
 
-#include "HasteComponent.h"
+#include "Haste.h"
 #include "BaseCharacter.h"
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-UHasteComponent::UHasteComponent()
+AHaste::AHaste()
 {
-	bisOnCooldown = false;
-	abilityCooldown = 10;
+	bIsOnCooldown = false;
+	cooldown = 10;
+	cooldownRemaining = cooldown;
 	activatedTime = 5;
 
 
 }
-void UHasteComponent::BeginPlay()
+void AHaste::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -25,38 +26,49 @@ void UHasteComponent::BeginPlay()
 
 		if (character->InputComponent)
 		{
-			character->InputComponent->BindAction("Ability3", IE_Released, this, &UHasteComponent::Execute);
+			character->InputComponent->BindAction("Ability3", IE_Released, this, &AHaste::Execute);
 		}
 	}
 }
-void UHasteComponent::Execute()
+
+void AHaste::Tick(float deltaTime)
 {
-	if (!bisOnCooldown)
+	if (bIsOnCooldown)
+	{
+		cooldownRemaining = GetWorldTimerManager().GetTimerRemaining(cooldownTimer);
+	}
+}
+
+void AHaste::Execute()
+{
+	if (!bIsOnCooldown)
 	{
 		ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 		if (character)
 		{
-			bisOnCooldown = true;
 			defaultWalkSpeed = character->GetCharacterMovement()->MaxWalkSpeed;
 			character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
-			FTimerHandle UnusedHandle;
-			character->GetWorldTimerManager().SetTimer(UnusedHandle, this, &UHasteComponent::ResetHaste, activatedTime, false);
+			
+			character->GetWorldTimerManager().SetTimer(activationTimer, this, &AHaste::ResetHaste, activatedTime, false);
 		}
 
 	}
 }
 
- 
-void UHasteComponent::ResetHaste()
+
+void AHaste::ResetHaste()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 	if (character)
 	{
-		FTimerHandle UnusedHandle;
-		character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
-		character->GetWorldTimerManager().SetTimer(UnusedHandle, [&]() {bisOnCooldown = false; }, abilityCooldown, false);
+		bIsOnCooldown = true;
+
+ 		character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
+		character->GetWorldTimerManager().SetTimer(cooldownTimer, [&]() {cooldownRemaining = cooldown; bIsOnCooldown = false; }, cooldown, false);
+		
 	}
 
 }
+

@@ -1,21 +1,30 @@
 // This project was created by John R. Otis Jr. and may not be used by anyone without explicit written consent by the author. Dec 2017
 
-#include "SuperJumpComponent.h"
+#include "Leap.h"
 #include "BaseCharacter.h"
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
-USuperJumpComponent::USuperJumpComponent()
+ALeap::ALeap()
 {
-	abilityCooldown = 10;
+	cooldown = 10;
+	cooldownRemaining = cooldown;
 	activatedTime = 2;
-	bisOnCooldown = false;
+	bIsOnCooldown = false;
 
- 
+
 }
 
-void USuperJumpComponent::BeginPlay()
+void ALeap::Tick(float DeltaTime)
+{
+	if (bIsOnCooldown)
+	{
+		cooldownRemaining = GetWorldTimerManager().GetTimerRemaining(cooldownTimer);
+	}
+}
+
+void ALeap::BeginPlay()
 {
 	Super::BeginPlay();
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
@@ -26,36 +35,35 @@ void USuperJumpComponent::BeginPlay()
 
 		if (character->InputComponent)
 		{
-			character->InputComponent->BindAction("Ability2", IE_Released, this, &USuperJumpComponent::Execute);
+			character->InputComponent->BindAction("Ability2", IE_Released, this, &ALeap::Execute);
 		}
 	}
 }
+ 
 
-void USuperJumpComponent::Execute()
+void ALeap::Execute()
 {
-	if (!bisOnCooldown)
+	if (!bIsOnCooldown)
 	{
 		ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 		if (character)
 		{
-			bisOnCooldown = true;
 			defaultZVelocity = character->GetCharacterMovement()->JumpZVelocity;
 			character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 1.5;
-			FTimerHandle UnusedHandle;
-			character->GetWorldTimerManager().SetTimer(UnusedHandle, this, &USuperJumpComponent::ResetSuperJump, activatedTime, false);
+			character->GetWorldTimerManager().SetTimer(activationTimer, this, &ALeap::ResetSuperJump, activatedTime, false);
 		}
 	}
 }
- 
-void USuperJumpComponent::ResetSuperJump()
+
+void ALeap::ResetSuperJump()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 	if (character)
 	{
-		FTimerHandle UnusedHandle;
+		bIsOnCooldown = true;
 		character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
-		character->GetWorldTimerManager().SetTimer(UnusedHandle, [&]() { bisOnCooldown = false; }, abilityCooldown, false);
+		character->GetWorldTimerManager().SetTimer(cooldownTimer, [&]() { cooldownRemaining = cooldown;  bIsOnCooldown = false; }, cooldown, false);
 	}
 }

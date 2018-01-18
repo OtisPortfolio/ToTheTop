@@ -3,29 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityComponent.h"
-#include "HasteComponent.generated.h"
+#include "GameFramework/Actor.h"
+#include "Ability.h"
+#include "Haste.generated.h"
 
-/**
- * 
- */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class TOTHETOP_API UHasteComponent : public UAbilityComponent
+UCLASS(ClassGroup = (Custom))
+class TOTHETOP_API AHaste : public AAbility
 {
 	GENERATED_BODY()
 
 public:
-	UHasteComponent();
+	friend class UAbilityManagerComponent;
 	//Heals the character
 	UFUNCTION(BlueprintCallable, Category = "Ability|Haste")
-	void Execute() override;
+		void Execute() override;
 
 	virtual void BeginPlay() override;
- 	void ResetHaste();
-	
+	virtual void Tick(float deltaTime) override;
+	void ResetHaste();
+
 protected:
 
 	//default walk speed for character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|Haste", Meta = (BlueprintProtected = "true"))
 		float defaultWalkSpeed;
+
+private:
+	AHaste();
+	FTimerHandle cooldownTimer;
+	FTimerHandle activationTimer;
+
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+
+
 UCLASS(config=Game)
 class TOTHETOP_API ABaseCharacter : public ACharacter
 {
@@ -18,7 +20,10 @@ class TOTHETOP_API ABaseCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
- 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UAbilityManagerComponent* AbilityManager;
+	
  
 public:
 	// Sets default values for this character's properties
