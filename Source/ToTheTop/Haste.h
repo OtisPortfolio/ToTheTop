@@ -8,7 +8,7 @@
 #include "Haste.generated.h"
 
 UCLASS(ClassGroup = (Custom))
-class TOTHETOP_API AHaste : public AAbility
+class TOTHETOP_API UHaste : public UAbility
 {
 	GENERATED_BODY()
 
@@ -19,7 +19,7 @@ public:
 		void Execute() override;
 
 	virtual void BeginPlay() override;
-	virtual void Tick(float deltaTime) override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	void ResetHaste();
 
 protected:
@@ -29,7 +29,7 @@ protected:
 		float defaultWalkSpeed;
 
 private:
-	AHaste();
+	UHaste();
 	FTimerHandle cooldownTimer;
 	FTimerHandle activationTimer;
 

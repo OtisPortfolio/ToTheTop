@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/SceneComponent.h"
 #include <vector>
 #include "AbilityManagerComponent.generated.h"
 
@@ -16,46 +16,45 @@ enum class EAbilities : uint8
 	EFireAOE,
 	ENone
 };
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TOTHETOP_API UAbilityManagerComponent : public UActorComponent
+UCLASS( ClassGroup=(Custom) )
+class TOTHETOP_API UAbilityManagerComponent : public USceneComponent
 {
 	GENERATED_BODY()
 private:
-  
-	UPROPERTY(EditAnywhere, Category = "Ability|Manager")
-	int maxAbilitySlots;
 
-	UPROPERTY(VisibleAnywhere, Category = "Ability|Manager")
-	int currentNumberOfAbilities;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability|Manager", meta = (AllowPrivateAccess = "true"))
+		int maxAbilitySlots;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|Manager", meta = (AllowPrivateAccess = "true"))
+		int currentNumberOfAbilities;
 
 
-	std::vector<class AAbility*> characterAbilities;
- public:	
+	std::vector<class UAbility*> characterAbilities;
+public:
 	// Sets default values for this component's properties
 	UAbilityManagerComponent();
- 
-public:	
+
+public:
 	UFUNCTION(BlueprintPure, Category = "Ability|Manager")
-	int GetMaxAbilitySlots() const;
+		int GetMaxAbilitySlots() const;
 
 	UFUNCTION(BlueprintPure, Category = "Ability|Manager")
-	int GetCurrentNumberOfAbilities() const;
+		int GetCurrentNumberOfAbilities() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
 		void AddAbility(class ABaseCharacter* const baseChar, EAbilities ability);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
-	void RemoveAbility(EAbilities ability) ;
+		void RemoveAbility(EAbilities ability);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
 		bool HasAbility(EAbilities ability);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
-		AAbility* const GetAbility(EAbilities ability) const;
+		UAbility* const GetAbility(EAbilities ability) const;
 
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
-		AAbility* const GetAbilityBySlot(int slotNum) const;
+		UAbility* const GetAbilityBySlot(int slotNum) const;
 
 };

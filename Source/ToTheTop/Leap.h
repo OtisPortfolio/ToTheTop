@@ -9,11 +9,10 @@
 
  
 UCLASS()
-class TOTHETOP_API ALeap : public AAbility
+class TOTHETOP_API ULeap : public UAbility
 {
 	GENERATED_BODY()
-		ALeap();
-	virtual void Tick(float DeltaTime) override;
+		ULeap();
 	FTimerHandle cooldownTimer;
 	FTimerHandle activationTimer;
 
@@ -32,5 +31,6 @@ protected:
 	//default jump velocity for character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability|SuperJump", Meta = (BlueprintProtected = "true"))
 		float defaultZVelocity;
- 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 };

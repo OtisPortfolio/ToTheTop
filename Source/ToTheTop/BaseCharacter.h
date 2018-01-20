@@ -21,14 +21,17 @@ class TOTHETOP_API ABaseCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
 		class UAbilityManagerComponent* AbilityManager;
 	
  
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
- 
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	class UAbilityManagerComponent* const GetAbilityManager() const;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseTurnRate;

@@ -8,7 +8,7 @@
 #include "FireAOE.generated.h"
 
 UCLASS(ClassGroup = (Custom))
-class TOTHETOP_API AFireAOE : public AAbility
+class TOTHETOP_API UFireAOE : public UAbility
 {
 	GENERATED_BODY()
 
@@ -28,6 +28,6 @@ public:
 		void Execute() override {};
 
 	private:
-		AFireAOE();
+		UFireAOE();
 
 };

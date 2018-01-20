@@ -3,7 +3,7 @@
 #include "FireAOE.h"
 
 // Sets default values
-AFireAOE::AFireAOE()
+UFireAOE::UFireAOE()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
@@ -11,9 +11,8 @@ AFireAOE::AFireAOE()
 }
 
 // Called when the game starts or when spawned
-void AFireAOE::BeginPlay()
+void UFireAOE::BeginPlay()
 {
-	Super::BeginPlay();
-
+ 
 }
 

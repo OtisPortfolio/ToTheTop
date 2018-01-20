@@ -8,12 +8,12 @@
 #include "HealSelf.generated.h"
 
 UCLASS(ClassGroup = (Custom))
-class TOTHETOP_API AHealSelf : public AAbility
+class TOTHETOP_API UHealSelf : public UAbility
 {
 	GENERATED_BODY()
 
 
-	AHealSelf();
+		UHealSelf();
 public:
  
 	friend class UAbilityManagerComponent;

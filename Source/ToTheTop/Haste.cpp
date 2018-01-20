@@ -5,7 +5,7 @@
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-AHaste::AHaste()
+UHaste::UHaste()
 {
 	bIsOnCooldown = false;
 	cooldown = 10;
@@ -14,9 +14,8 @@ AHaste::AHaste()
 
 
 }
-void AHaste::BeginPlay()
+void UHaste::BeginPlay()
 {
-	Super::BeginPlay();
 
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
@@ -26,20 +25,20 @@ void AHaste::BeginPlay()
 
 		if (character->InputComponent)
 		{
-			character->InputComponent->BindAction("Ability3", IE_Released, this, &AHaste::Execute);
+			character->InputComponent->BindAction("Ability3", IE_Released, this, &UHaste::Execute);
 		}
 	}
 }
 
-void AHaste::Tick(float deltaTime)
+void UHaste::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	if (bIsOnCooldown)
 	{
-		cooldownRemaining = GetWorldTimerManager().GetTimerRemaining(cooldownTimer);
+		cooldownRemaining = GetWorld()->GetTimerManager().GetTimerRemaining(cooldownTimer);
 	}
 }
 
-void AHaste::Execute()
+void UHaste::Execute()
 {
 	if (!bIsOnCooldown)
 	{
@@ -50,14 +49,14 @@ void AHaste::Execute()
 			defaultWalkSpeed = character->GetCharacterMovement()->MaxWalkSpeed;
 			character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
 			
-			character->GetWorldTimerManager().SetTimer(activationTimer, this, &AHaste::ResetHaste, activatedTime, false);
+			GetWorld()->GetTimerManager().SetTimer(activationTimer, this, &UHaste::ResetHaste, activatedTime, false);
 		}
 
 	}
 }
 
 
-void AHaste::ResetHaste()
+void UHaste::ResetHaste()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
@@ -66,7 +65,7 @@ void AHaste::ResetHaste()
 		bIsOnCooldown = true;
 
  		character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
-		character->GetWorldTimerManager().SetTimer(cooldownTimer, [&]() {cooldownRemaining = cooldown; bIsOnCooldown = false; }, cooldown, false);
+		GetWorld()->GetTimerManager().SetTimer(cooldownTimer, [&]() {cooldownRemaining = cooldown; bIsOnCooldown = false; }, cooldown, false);
 		
 	}
 

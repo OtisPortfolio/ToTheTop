@@ -6,7 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
-ALeap::ALeap()
+ULeap::ULeap()
 {
 	cooldown = 10;
 	cooldownRemaining = cooldown;
@@ -16,18 +16,19 @@ ALeap::ALeap()
 
 }
 
-void ALeap::Tick(float DeltaTime)
+void ULeap::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
+
 	if (bIsOnCooldown)
 	{
-		cooldownRemaining = GetWorldTimerManager().GetTimerRemaining(cooldownTimer);
+ 
+		cooldownRemaining = GetWorld()->GetTimerManager().GetTimerRemaining(cooldownTimer);
 	}
 }
 
-void ALeap::BeginPlay()
+void ULeap::BeginPlay()
 {
-	Super::BeginPlay();
-	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
+ 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 	if (character)
 	{
@@ -35,13 +36,13 @@ void ALeap::BeginPlay()
 
 		if (character->InputComponent)
 		{
-			character->InputComponent->BindAction("Ability2", IE_Released, this, &ALeap::Execute);
+			character->InputComponent->BindAction("Ability2", IE_Released, this, &ULeap::Execute);
 		}
 	}
 }
  
 
-void ALeap::Execute()
+void ULeap::Execute()
 {
 	if (!bIsOnCooldown)
 	{
@@ -51,12 +52,12 @@ void ALeap::Execute()
 		{
 			defaultZVelocity = character->GetCharacterMovement()->JumpZVelocity;
 			character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 1.5;
-			character->GetWorldTimerManager().SetTimer(activationTimer, this, &ALeap::ResetSuperJump, activatedTime, false);
+			GetWorld()->GetTimerManager().SetTimer(activationTimer, this, &ULeap::ResetSuperJump, activatedTime, false);
 		}
 	}
 }
 
-void ALeap::ResetSuperJump()
+void ULeap::ResetSuperJump()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
@@ -64,6 +65,6 @@ void ALeap::ResetSuperJump()
 	{
 		bIsOnCooldown = true;
 		character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
-		character->GetWorldTimerManager().SetTimer(cooldownTimer, [&]() { cooldownRemaining = cooldown;  bIsOnCooldown = false; }, cooldown, false);
+		GetWorld()->GetTimerManager().SetTimer(cooldownTimer, [&]() { cooldownRemaining = cooldown;  bIsOnCooldown = false; }, cooldown, false);
 	}
 }

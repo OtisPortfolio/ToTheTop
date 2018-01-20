@@ -33,8 +33,9 @@ ABaseCharacter::ABaseCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	AbilityManager = CreateDefaultSubobject<UAbilityManagerComponent>(TEXT("Ability Manager"));
- 
+
+
+
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
@@ -61,14 +62,25 @@ ABaseCharacter::ABaseCharacter()
 
  
 
+UAbilityManagerComponent* const ABaseCharacter::GetAbilityManager() const
+{
+	return AbilityManager;
+}
+
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
  
-	AbilityManager->AddAbility(this, EAbilities::EHaste);
-	AbilityManager->AddAbility(this, EAbilities::EHeal);
-	AbilityManager->AddAbility(this, EAbilities::ELeap);
+	AbilityManager = NewObject<UAbilityManagerComponent>(RootComponent);
+	AbilityManager->AttachTo(RootComponent);
+	if (AbilityManager)
+	{
+		AbilityManager->AddAbility(this, EAbilities::EHaste);
+		AbilityManager->AddAbility(this, EAbilities::EHeal);
+		AbilityManager->AddAbility(this, EAbilities::ELeap);
+	}
+
 	
 }
 

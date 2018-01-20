@@ -8,14 +8,14 @@
 #include "FireAOE.h"
 #include "HealSelf.h"
 
- 
 
- 
+
+
 UAbilityManagerComponent::UAbilityManagerComponent()
 	: maxAbilitySlots(3), currentNumberOfAbilities(0)
 {
 }
- 
+
 
 int UAbilityManagerComponent::GetMaxAbilitySlots() const
 {
@@ -27,60 +27,55 @@ int UAbilityManagerComponent::GetCurrentNumberOfAbilities() const
 	return currentNumberOfAbilities;
 }
 
-void UAbilityManagerComponent::AddAbility(class ABaseCharacter* const owner, EAbilities ability)
+void UAbilityManagerComponent::AddAbility(class ABaseCharacter* const owner, EAbilities Eability)
 {
-	if (!HasAbility(ability))
+	if (!HasAbility(Eability))
 	{
 		if (currentNumberOfAbilities < maxAbilitySlots)
 		{
-			AAbility* abilityActor = nullptr;
-			FVector Location = owner->GetActorLocation();
-			FRotator Rotation = owner->GetActorRotation();
-			FActorSpawnParameters SpawnInfo;
-			SpawnInfo.Owner = owner;
-
-			switch (ability)
+			UAbility* ability = nullptr;
+ 
+			switch (Eability)
 			{
 			case EAbilities::EFireAOE:
-				abilityActor = GetWorld()->SpawnActor<AFireAOE>(Location, Rotation, SpawnInfo);
- 				break;
+				ability = NewObject<UFireAOE>(owner);
+				break;
 			case EAbilities::EHaste:
-				abilityActor = GetWorld()->SpawnActor<AHaste>(Location, Rotation, SpawnInfo);
+				ability = NewObject<UHaste>(owner);
 				break;
 			case EAbilities::EHeal:
-				abilityActor = GetWorld()->SpawnActor<AHealSelf>(Location, Rotation, SpawnInfo);
+				ability = NewObject<UHealSelf>(owner);
 				break;
 			case EAbilities::ELeap:
-				abilityActor = GetWorld()->SpawnActor<ALeap>(Location, Rotation, SpawnInfo);
+				ability = NewObject<ULeap>(owner);
 				break;
 			}
-			if (abilityActor != nullptr)
+			if (ability != nullptr)
 			{
-	 
-				abilityActor->AttachToComponent(owner->GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
-				characterAbilities.push_back(abilityActor);
+				ability->AttachToComponent(owner->GetAbilityManager(), FAttachmentTransformRules::KeepWorldTransform);
+				characterAbilities.push_back(ability);
 				currentNumberOfAbilities++;
 			}
 		}
 	}
 
 }
- 
+
 
 void UAbilityManagerComponent::RemoveAbility(EAbilities ability)
 {
 	if (currentNumberOfAbilities > 0)
 	{
-		
-		std::vector<AAbility*>::iterator abilityActor;
+
+		std::vector<UAbility*>::iterator abilityActor;
 
 		//find the actor that matches the ability being removed
 		for (auto itr = characterAbilities.begin(); abilityActor < characterAbilities.end(); ++itr)
 		{
- 
-			if(ability ==  EAbilities::EFireAOE)
+
+			if (ability == EAbilities::EFireAOE)
 			{
-				AFireAOE* fireAoe = Cast<AFireAOE>(*itr);
+				UFireAOE* fireAoe = Cast<UFireAOE>(*itr);
 				if (fireAoe)
 				{
 					abilityActor = itr;
@@ -90,7 +85,7 @@ void UAbilityManagerComponent::RemoveAbility(EAbilities ability)
 			else if (ability == EAbilities::EHaste)
 			{
 
-				AHaste* haste = Cast<AHaste>(*itr);
+				UHaste* haste = Cast<UHaste>(*itr);
 				if (haste)
 				{
 					abilityActor = itr;
@@ -99,7 +94,7 @@ void UAbilityManagerComponent::RemoveAbility(EAbilities ability)
 			}
 			else if (ability == EAbilities::EHeal)
 			{
-				AHealSelf* healSelf = Cast<AHealSelf>(*itr);
+				UHealSelf* healSelf = Cast<UHealSelf>(*itr);
 				if (healSelf)
 				{
 					abilityActor = itr;
@@ -110,18 +105,18 @@ void UAbilityManagerComponent::RemoveAbility(EAbilities ability)
 			else if (ability == EAbilities::ELeap)
 			{
 
-				ALeap* leap = Cast<ALeap>(*itr);
+				ULeap* leap = Cast<ULeap>(*itr);
 				if (leap)
 				{
 					abilityActor = itr;
 					break;
 				}
 			}
- 
+
 		}
 		if (abilityActor != characterAbilities.end())
 		{
-			(*abilityActor)->Destroy();
+			(*abilityActor)->DestroyComponent();
 			delete &(*abilityActor);
 			currentNumberOfAbilities--;
 
@@ -139,7 +134,7 @@ bool UAbilityManagerComponent::HasAbility(EAbilities ability)
 
 			if (ability == EAbilities::EFireAOE)
 			{
-				AFireAOE* fireAoe = Cast<AFireAOE>(*itr);
+				UFireAOE* fireAoe = Cast<UFireAOE>(*itr);
 				if (fireAoe)
 				{
 					return true;
@@ -148,7 +143,7 @@ bool UAbilityManagerComponent::HasAbility(EAbilities ability)
 			else if (ability == EAbilities::EHaste)
 			{
 
-				AHaste* haste = Cast<AHaste>(*itr);
+				UHaste* haste = Cast<UHaste>(*itr);
 				if (haste)
 				{
 					return true;
@@ -156,7 +151,7 @@ bool UAbilityManagerComponent::HasAbility(EAbilities ability)
 			}
 			else if (ability == EAbilities::EHeal)
 			{
-				AHealSelf* healSelf = Cast<AHealSelf>(*itr);
+				UHealSelf* healSelf = Cast<UHealSelf>(*itr);
 				if (healSelf)
 				{
 					return true;
@@ -166,7 +161,7 @@ bool UAbilityManagerComponent::HasAbility(EAbilities ability)
 			else if (ability == EAbilities::ELeap)
 			{
 
-				ALeap* leap = Cast<ALeap>(*itr);
+				ULeap* leap = Cast<ULeap>(*itr);
 				if (leap)
 				{
 					return true;
@@ -181,19 +176,19 @@ bool UAbilityManagerComponent::HasAbility(EAbilities ability)
 
 }
 
-AAbility* const UAbilityManagerComponent::GetAbility(EAbilities ability) const
+UAbility* const UAbilityManagerComponent::GetAbility(EAbilities ability) const
 {
 	if (currentNumberOfAbilities > 0)
 	{
 
- 
+
 		//find the actor that matches the ability being removed
 		for (auto itr = characterAbilities.begin(); itr < characterAbilities.end(); ++itr)
 		{
 
 			if (ability == EAbilities::EFireAOE)
 			{
-				AFireAOE* fireAoe = Cast<AFireAOE>(*itr);
+				UFireAOE* fireAoe = Cast<UFireAOE>(*itr);
 				if (fireAoe)
 				{
 					return *itr;
@@ -202,7 +197,7 @@ AAbility* const UAbilityManagerComponent::GetAbility(EAbilities ability) const
 			else if (ability == EAbilities::EHaste)
 			{
 
-				AHaste* haste = Cast<AHaste>(*itr);
+				UHaste* haste = Cast<UHaste>(*itr);
 				if (haste)
 				{
 					return *itr;
@@ -210,7 +205,7 @@ AAbility* const UAbilityManagerComponent::GetAbility(EAbilities ability) const
 			}
 			else if (ability == EAbilities::EHeal)
 			{
-				AHealSelf* healSelf = Cast<AHealSelf>(*itr);
+				UHealSelf* healSelf = Cast<UHealSelf>(*itr);
 				if (healSelf)
 				{
 					return *itr;
@@ -220,7 +215,7 @@ AAbility* const UAbilityManagerComponent::GetAbility(EAbilities ability) const
 			else if (ability == EAbilities::ELeap)
 			{
 
-				ALeap* leap = Cast<ALeap>(*itr);
+				ULeap* leap = Cast<ULeap>(*itr);
 				if (leap)
 				{
 					return *itr;
@@ -234,7 +229,7 @@ AAbility* const UAbilityManagerComponent::GetAbility(EAbilities ability) const
 	return nullptr;
 }
 
-AAbility* const UAbilityManagerComponent::GetAbilityBySlot(int slotNum) const
+UAbility* const UAbilityManagerComponent::GetAbilityBySlot(int slotNum) const
 {
 	return characterAbilities[slotNum];
 }

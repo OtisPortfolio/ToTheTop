@@ -4,7 +4,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
-AHealSelf::AHealSelf() : healIncrement(10.0f)
+UHealSelf::UHealSelf() : healIncrement(10.0f)
 {
 	cooldown = -1;
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> particleAsset(TEXT("/Game/InfinityBladeEffects/Effects/FX_Mobile/Fire/combat/P_AOE_CircleHeal.P_AOE_CircleHeal"));
@@ -12,18 +12,13 @@ AHealSelf::AHealSelf() : healIncrement(10.0f)
 	if (particleAsset.Succeeded())
 	{
 		HealParticleSystem->SetTemplate(particleAsset.Object);
-	}	
-	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
-	if (character)
-	{
-		HealParticleSystem->AttachTo(GetRootComponent());
 	}
-
 	HealParticleSystem->SetVisibility(false);
 }
-void AHealSelf::BeginPlay()
+void UHealSelf::BeginPlay()
 {
 	Super::BeginPlay();
+	HealParticleSystem->AttachTo(GetOwner()->GetRootComponent());
 
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
@@ -32,11 +27,11 @@ void AHealSelf::BeginPlay()
 
 		if (character->InputComponent)
 		{
-			character->InputComponent->BindAction("Ability1", IE_Released, this, &AHealSelf::Execute);
+			character->InputComponent->BindAction("Ability1", IE_Released, this, &UHealSelf::Execute);
 		}
 	}
 }
-void AHealSelf::Execute()
+void UHealSelf::Execute()
 {
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 	if (character)

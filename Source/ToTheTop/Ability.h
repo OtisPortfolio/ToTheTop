@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/SceneComponent.h"
 #include "Ability.generated.h"
 
 UCLASS(ClassGroup = (Custom), abstract)
-class TOTHETOP_API AAbility : public AActor
+class TOTHETOP_API UAbility : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	AAbility() : cooldown(15.0f), cooldownRemaining(cooldown), activatedTime(5.0f), bIsOnCooldown(false)
+	UAbility() : cooldown(15.0f), cooldownRemaining(cooldown), activatedTime(5.0f), bIsOnCooldown(false)
 	{
-		PrimaryActorTick.bCanEverTick = true;
+		PrimaryComponentTick.bCanEverTick = true;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
