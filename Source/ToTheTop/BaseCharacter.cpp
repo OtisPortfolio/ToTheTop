@@ -8,7 +8,11 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "AbilityManagerComponent.h"
-
+#include "Ability.h"
+#include "Leap.h"
+#include "Haste.h"
+#include "FireAOE.h"
+#include "HealSelf.h"
 
 
  
@@ -54,7 +58,7 @@ ABaseCharacter::ABaseCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
  
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	// are set in the derived blueprint asset namedd MyCharacter (to avoid direct content references in C++)
  
 }
 
@@ -76,11 +80,15 @@ void ABaseCharacter::BeginPlay()
 	AbilityManager->AttachTo(RootComponent);
 	if (AbilityManager)
 	{
-		AbilityManager->AddAbility(this, EAbilities::EHaste);
-		AbilityManager->AddAbility(this, EAbilities::EHeal);
-		AbilityManager->AddAbility(this, EAbilities::ELeap);
-	}
+		AbilityManager->AddAbility<UHealSelf>(this);
+		AbilityManager->AddAbility<UHaste>(this);
+		AbilityManager->AddAbility<ULeap>(this);
+		AssignInput<UHealSelf>(1);
+		AssignInput<UHaste>(2);
+		AssignInput<ULeap>(3);
 
+	}
+ 
 	
 }
 
@@ -205,7 +213,13 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
  	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+
+
+
+
   
 }
+
  
 

@@ -98,7 +98,7 @@ protected:
 	//Animation implemented in BP
 	UFUNCTION(BlueprintImplementableEvent, Category = "Animations")
 		void InjuredAnimation();
- 
+
 	//Animation implemented in BP
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Animations")
 		void DeathAnimation();
@@ -116,5 +116,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character", Meta = (BlueprintProtected = "true"))
 	int32 attackPower;
 
- 
+	template <class T>
+	FORCEINLINE void AssignInput(int abilityNumber)
+	{
+		InputComponent->BindAction("Ability" + abilityNumber, IE_Released, Cast<T>(AbilityManager->GetAbility<T>()), &T::Execute);
+	}
 };

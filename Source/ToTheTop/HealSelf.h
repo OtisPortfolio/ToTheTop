@@ -30,11 +30,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|HealSelf")
 		void Execute() override;
 
+
+
 protected:
 
 	//how much the healing spell will heal character
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability|HealSelf", Meta = (BlueprintProtected = "true"))
 		int healIncrement;
-
-
+	UPROPERTY()
+	class UParticleSystem* ps;
 };

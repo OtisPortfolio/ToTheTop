@@ -27,6 +27,12 @@ int UAbilityManagerComponent::GetCurrentNumberOfAbilities() const
 	return currentNumberOfAbilities;
 }
 
+int UAbilityManagerComponent::GetAbilitySlotNumber(EAbilities ability) const
+{
+	//return std::distance(characterAbilities.begin(), GetAbility(ability));
+	return -1;
+}
+
 void UAbilityManagerComponent::AddAbility(class ABaseCharacter* const owner, EAbilities Eability)
 {
 	if (!HasAbility(Eability))
@@ -52,6 +58,7 @@ void UAbilityManagerComponent::AddAbility(class ABaseCharacter* const owner, EAb
 			}
 			if (ability != nullptr)
 			{
+				ability->RegisterComponent();
 				ability->AttachToComponent(owner->GetAbilityManager(), FAttachmentTransformRules::KeepWorldTransform);
 				characterAbilities.push_back(ability);
 				currentNumberOfAbilities++;

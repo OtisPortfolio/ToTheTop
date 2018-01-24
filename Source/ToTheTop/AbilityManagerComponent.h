@@ -7,6 +7,7 @@
 #include <vector>
 #include "AbilityManagerComponent.generated.h"
 
+
 UENUM(BlueprintType)
 enum class EAbilities : uint8
 {
@@ -16,6 +17,7 @@ enum class EAbilities : uint8
 	EFireAOE,
 	ENone
 };
+class ABaseCharacter;
 UCLASS( ClassGroup=(Custom) )
 class TOTHETOP_API UAbilityManagerComponent : public USceneComponent
 {
@@ -40,7 +42,10 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Ability|Manager")
 		int GetCurrentNumberOfAbilities() const;
-
+ 
+	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
+		UAbility* const GetAbilityBySlot(int slotNum) const;
+ 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
 		void AddAbility(class ABaseCharacter* const baseChar, EAbilities ability);
 
@@ -55,6 +60,90 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Manager")
-		UAbility* const GetAbilityBySlot(int slotNum) const;
+		int GetAbilitySlotNumber(EAbilities ability) const;
 
+	template <typename T>
+	int GetAbilitySlotNumber() const
+	{
+		return std::distance(characterAbilities.begin(), GetAbility<T>());
+	}
+
+	template <typename T>
+	FORCEINLINE void AddAbility(ABaseCharacter* const owner)
+	{
+		if (!HasAbility<T>())
+		{
+			if (currentNumberOfAbilities < maxAbilitySlots)
+			{
+				UAbility* ability = NewObject<T>(owner);
+				if (ability != nullptr)
+				{
+					ability->RegisterComponent();
+					ability->AttachToComponent(owner->GetAbilityManager(), FAttachmentTransformRules::KeepWorldTransform);
+					characterAbilities.push_back(ability);
+					currentNumberOfAbilities++;
+				}
+			}
+		}
+
+	}
+
+	template <typename T>
+	FORCEINLINE void RemoveAbility()
+	{
+		if (currentNumberOfAbilities > 0)
+		{
+			std::vector<UAbility*>::iterator abilityActor;
+			//find the actor that matches the ability being removed
+			for (auto itr = characterAbilities.begin(); abilityActor < characterAbilities.end(); ++itr)
+			{
+				if (Cast<T>(*itr))
+				{
+					T* ability = Cast<T>(*itr);
+					abilityActor = itr;
+					break;
+				}
+			}
+			if (abilityActor != characterAbilities.end())
+			{
+				(*abilityActor)->DestroyComponent();
+				delete &(*abilityActor);
+				currentNumberOfAbilities--;
+			}
+		}
+	}
+	template <typename T>
+	FORCEINLINE bool HasAbility()
+	{
+		if (currentNumberOfAbilities > 0)
+		{
+			//find the actor that matches the ability being removed
+			for (auto itr = characterAbilities.begin(); itr < characterAbilities.end(); ++itr)
+			{
+				if (Cast<T>(*itr))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	template <typename T>
+	FORCEINLINE UAbility* const GetAbility() const
+	{
+		if (currentNumberOfAbilities > 0)
+		{
+			//find the actor that matches the ability being removed
+			for (auto itr = characterAbilities.begin(); itr < characterAbilities.end(); ++itr)
+			{
+				if (Cast<T>(*itr))
+				{
+					T* ability = Cast<T>(*itr);
+					return *itr;
+				}
+			}
+			return nullptr;
+		}
+		return nullptr;
+	}
 };

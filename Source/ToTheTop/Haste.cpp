@@ -22,11 +22,7 @@ void UHaste::BeginPlay()
 	if (character)
 	{
 		defaultWalkSpeed = character->GetCharacterMovement()->MaxWalkSpeed;
-
-		if (character->InputComponent)
-		{
-			character->InputComponent->BindAction("Ability3", IE_Released, this, &UHaste::Execute);
-		}
+ 
 	}
 }
 

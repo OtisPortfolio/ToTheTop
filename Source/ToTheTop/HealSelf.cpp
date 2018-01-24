@@ -2,34 +2,28 @@
 #include "HealSelf.h"
 #include "BaseCharacter.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 UHealSelf::UHealSelf() : healIncrement(10.0f)
 {
 	cooldown = -1;
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> particleAsset(TEXT("/Game/InfinityBladeEffects/Effects/FX_Mobile/Fire/combat/P_AOE_CircleHeal.P_AOE_CircleHeal"));
-	HealParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("HealParticleSystem"));
-	if (particleAsset.Succeeded())
-	{
-		HealParticleSystem->SetTemplate(particleAsset.Object);
-	}
-	HealParticleSystem->SetVisibility(false);
+	ps = particleAsset.Object;
 }
 void UHealSelf::BeginPlay()
 {
 	Super::BeginPlay();
+	HealParticleSystem = NewObject<UParticleSystemComponent>(GetOwner());
+	if (ps)
+	{
+		HealParticleSystem->SetTemplate(ps);
+	}
+	HealParticleSystem->SetVisibility(false);
+	HealParticleSystem->RegisterComponent();
 	HealParticleSystem->AttachTo(GetOwner()->GetRootComponent());
 
-	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
-
-	if (character)
-	{
-
-		if (character->InputComponent)
-		{
-			character->InputComponent->BindAction("Ability1", IE_Released, this, &UHealSelf::Execute);
-		}
-	}
+ 
 }
 void UHealSelf::Execute()
 {

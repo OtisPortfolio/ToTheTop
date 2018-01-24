@@ -32,12 +32,8 @@ void ULeap::BeginPlay()
 
 	if (character)
 	{
-		defaultZVelocity = character->GetCharacterMovement()->JumpZVelocity;;
-
-		if (character->InputComponent)
-		{
-			character->InputComponent->BindAction("Ability2", IE_Released, this, &ULeap::Execute);
-		}
+		defaultZVelocity = character->GetCharacterMovement()->JumpZVelocity;
+		
 	}
 }
  
