@@ -71,27 +71,7 @@ UAbilityManagerComponent* const ABaseCharacter::GetAbilityManager() const
 	return AbilityManager;
 }
 
-// Called when the game starts or when spawned
-void ABaseCharacter::BeginPlay()
-{
-	Super::BeginPlay();
  
-	AbilityManager = NewObject<UAbilityManagerComponent>(RootComponent);
-	AbilityManager->AttachTo(RootComponent);
-	if (AbilityManager)
-	{
-		AbilityManager->AddAbility<UHealSelf>(this);
-		AbilityManager->AddAbility<UHaste>(this);
-		AbilityManager->AddAbility<ULeap>(this);
-		AssignInput<UHealSelf>(1);
-		AssignInput<UHaste>(2);
-		AssignInput<ULeap>(3);
-
-	}
- 
-	
-}
-
 float ABaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
@@ -199,6 +179,27 @@ void ABaseCharacter::Death_Implementation()
 {
 	Destroy(this);
 }
+
+void ABaseCharacter::AssignAbilityInput()
+{
+
+	AbilityManager = NewObject<UAbilityManagerComponent>(RootComponent);
+	AbilityManager->AttachTo(RootComponent);
+	if (AbilityManager)
+	{
+		AbilityManager->AddAbility<UHealSelf>(this);
+		AbilityManager->AddAbility<UHaste>(this);
+		AbilityManager->AddAbility<ULeap>(this);
+		//AssignInput<UHealSelf>(1);
+		//AssignInput<UHaste>(2);
+		//AssignInput<ULeap>(3);
+
+		InputComponent->BindAction("Ability1", IE_Released, Cast<UHealSelf>(AbilityManager->GetAbility<UHealSelf>()), &UHealSelf::Execute);
+		InputComponent->BindAction("Ability2", IE_Released, Cast<ULeap>(AbilityManager->GetAbility<ULeap>()), &ULeap::Execute);
+		InputComponent->BindAction("Ability3", IE_Released, Cast<UHaste>(AbilityManager->GetAbility<UHaste>()), &UHaste::Execute);
+	}
+}
+
 // Called to bind functionality to input
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -214,8 +215,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
  	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-
-
+	AssignAbilityInput();
 
 
   

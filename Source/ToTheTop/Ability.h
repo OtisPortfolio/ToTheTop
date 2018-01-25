@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 		float GetAcivatedTime() const { return activatedTime; }
 
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+		bool IsOnCooldown() const { return bIsOnCooldown; }
+
 protected:
 	UPROPERTY(visibleAnywhere, Category = "Ability")
 		float cooldown;
