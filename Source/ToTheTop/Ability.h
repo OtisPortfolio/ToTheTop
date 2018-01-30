@@ -13,7 +13,7 @@ class TOTHETOP_API UAbility : public USceneComponent
 
 public:
 	// Sets default values for this component's properties
-	UAbility() : cooldown(15.0f), cooldownRemaining(cooldown), activatedTime(5.0f), bIsOnCooldown(false)
+	UAbility() : cooldown(15.0f), cooldownRemaining(cooldown), activationLength(5.0f), bIsActivated(false),bIsOnCooldown(false)
 	{
 		PrimaryComponentTick.bCanEverTick = true;
 	}
@@ -26,10 +26,13 @@ public:
 		float GetCooldownRemaining() const { return cooldownRemaining; }
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
-		float GetAcivatedTime() const { return activatedTime; }
+		float GetAcivatedTime() const { return activationLength; }
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 		bool IsOnCooldown() const { return bIsOnCooldown; }
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+		bool IsActivated() const { return bIsActivated; }
 
 protected:
 	UPROPERTY(visibleAnywhere, Category = "Ability")
@@ -38,7 +41,10 @@ protected:
 		float cooldownRemaining;
 
 	UPROPERTY(visibleAnywhere, Category = "Ability")
-		float activatedTime;
+		float activationLength;
+
+	UPROPERTY(visibleAnywhere, Category = "Ability")
+		bool bIsActivated;
 
 	UPROPERTY(visibleAnywhere, Category = "Ability")
 		bool bIsOnCooldown;

@@ -10,19 +10,16 @@ UHaste::UHaste()
 	bIsOnCooldown = false;
 	cooldown = 10;
 	cooldownRemaining = cooldown;
-	activatedTime = 5;
-
-
+	activationLength = 5;
+	bIsActivated = false;
 }
 void UHaste::BeginPlay()
 {
-
 	ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 	if (character)
 	{
 		defaultWalkSpeed = character->GetCharacterMovement()->MaxWalkSpeed;
- 
 	}
 }
 
@@ -36,16 +33,16 @@ void UHaste::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComp
 
 void UHaste::Execute()
 {
-	if (!bIsOnCooldown)
+	if (!bIsOnCooldown && !bIsActivated)
 	{
 		ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 		if (character)
 		{
+			bIsActivated = true;
 			defaultWalkSpeed = character->GetCharacterMovement()->MaxWalkSpeed;
 			character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed * 2;
-			
-			GetWorld()->GetTimerManager().SetTimer(activationTimer, this, &UHaste::ResetHaste, activatedTime, false);
+			GetWorld()->GetTimerManager().SetTimer(activationTimer, this, &UHaste::ResetHaste, activationLength, false);
 		}
 
 	}
@@ -58,11 +55,10 @@ void UHaste::ResetHaste()
 
 	if (character)
 	{
+		bIsActivated = false;
 		bIsOnCooldown = true;
-
  		character->GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
 		GetWorld()->GetTimerManager().SetTimer(cooldownTimer, [&]() {cooldownRemaining = cooldown; bIsOnCooldown = false; }, cooldown, false);
-		
 	}
 
 }

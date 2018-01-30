@@ -10,9 +10,9 @@ ULeap::ULeap()
 {
 	cooldown = 10;
 	cooldownRemaining = cooldown;
-	activatedTime = 2;
+	activationLength = 2;
 	bIsOnCooldown = false;
-
+	bIsActivated = false;
 
 }
 
@@ -21,7 +21,6 @@ void ULeap::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorCompo
 
 	if (bIsOnCooldown)
 	{
- 
 		cooldownRemaining = GetWorld()->GetTimerManager().GetTimerRemaining(cooldownTimer);
 	}
 }
@@ -40,15 +39,16 @@ void ULeap::BeginPlay()
 
 void ULeap::Execute()
 {
-	if (!bIsOnCooldown)
+	if (!bIsOnCooldown && !bIsActivated)
 	{
 		ABaseCharacter* character = Cast<ABaseCharacter>(GetOwner());
 
 		if (character)
 		{
+			bIsActivated = true;
 			defaultZVelocity = character->GetCharacterMovement()->JumpZVelocity;
 			character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity * 1.5;
-			GetWorld()->GetTimerManager().SetTimer(activationTimer, this, &ULeap::ResetSuperJump, activatedTime, false);
+			GetWorld()->GetTimerManager().SetTimer(activationTimer, this, &ULeap::ResetSuperJump, activationLength, false);
 		}
 	}
 }
@@ -59,6 +59,7 @@ void ULeap::ResetSuperJump()
 
 	if (character)
 	{
+		bIsActivated = false;
 		bIsOnCooldown = true;
 		character->GetCharacterMovement()->JumpZVelocity = defaultZVelocity;
 		GetWorld()->GetTimerManager().SetTimer(cooldownTimer, [&]() { cooldownRemaining = cooldown;  bIsOnCooldown = false; }, cooldown, false);
