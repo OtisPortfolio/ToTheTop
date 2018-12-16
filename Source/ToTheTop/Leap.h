@@ -20,7 +20,6 @@ class TOTHETOP_API ULeap : public UAbility
 public:
 	friend class UAbilityManagerComponent;
 
-	UFUNCTION(BlueprintCallable, Category = "Ability|SuperJump")
 		void Execute() override;
 
 	virtual void BeginPlay() override;

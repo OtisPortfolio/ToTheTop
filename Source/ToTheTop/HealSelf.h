@@ -27,7 +27,6 @@ public:
 	virtual void BeginPlay() override;
 
 	//Heals the character
-	UFUNCTION(BlueprintCallable, Category = "Ability|HealSelf")
 		void Execute() override;
 
 

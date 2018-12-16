@@ -15,7 +15,6 @@ class TOTHETOP_API UHaste : public UAbility
 public:
 	friend class UAbilityManagerComponent;
 	//Heals the character
-	UFUNCTION(BlueprintCallable, Category = "Ability|Haste")
 		void Execute() override;
 
 	virtual void BeginPlay() override;

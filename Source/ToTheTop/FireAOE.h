@@ -24,7 +24,6 @@ public:
 	/** Returns Attack Sphere **/
 	FORCEINLINE class USphereComponent* GetAttackSphere() const { return AttackSphere; }
 
-	UFUNCTION(BlueprintCallable, Category = "Ability|FireAoe")
 		void Execute() override {};
 
 	private:
